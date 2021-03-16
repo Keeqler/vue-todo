@@ -16,7 +16,7 @@ import Box from '@/components/Box.vue'
 import Input from '@/components/Input.vue'
 import Button from '@/components/Button.vue'
 import router from '@/router'
-import { Todo } from '@/types'
+import { todosStore } from '@/store/todos'
 
 export default Vue.extend({
   name: 'CreateTodo',
@@ -30,10 +30,7 @@ export default Vue.extend({
 
       if (!description) return
 
-      const todos: Todo[] = JSON.parse(localStorage.getItem('todos') || '[]')
-
-      todos.push({ id: Math.random().toString(), description, done: false })
-      localStorage.setItem('todos', JSON.stringify(todos))
+      todosStore.addTodo(description)
       router.push('/todos')
     },
   },

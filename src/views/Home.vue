@@ -16,6 +16,7 @@ import router from '@/router'
 import Box from '@/components/Box.vue'
 import Input from '@/components/Input.vue'
 import Button from '@/components/Button.vue'
+import { nameStore } from '@/store/name'
 
 export default Vue.extend({
   name: 'Home',
@@ -31,7 +32,7 @@ export default Vue.extend({
 
       if (!name) return
 
-      localStorage.setItem('name', name)
+      nameStore.setName(name)
       router.push('/todos')
     },
   },

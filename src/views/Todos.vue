@@ -1,15 +1,15 @@
 <template>
   <Box>
     <span class="welcome">
-      Welcome, <strong class="welcomeName">{{ name }}</strong
+      Welcome, <strong class="welcomeName">{{ nameState.name }}</strong
       >!
     </span>
 
     <h1>Your to-dos</h1>
-    <span class="noTodosMessage" v-if="!todos.length">There are no to-dos 🙁</span>
+    <span class="noTodosMessage" v-if="!todosState.todos.length">There are no to-dos 🙁</span>
 
     <div class="todos">
-      <div class="todo" v-for="todo in todos" :key="todo.id">
+      <div class="todo" v-for="todo in todosState.todos" :key="todo.id">
         <span>{{ todo.description }}</span>
 
         <div class="todoButtons">
@@ -39,40 +39,25 @@ import Vue from 'vue'
 
 import Box from '@/components/Box.vue'
 import LinkButton from '@/components/LinkButton.vue'
-import { Todo } from '@/types'
+import { nameStore } from '@/store/name'
+import { todosStore } from '@/store/todos'
 
 export default Vue.extend({
   name: 'Todos',
   components: { Box, LinkButton },
   data() {
     return {
-      name: this.$parent.$data.name,
-      todos: [],
+      nameState: nameStore.state,
+      todosState: todosStore.state,
     }
   },
   methods: {
-    handleDelete(id: string) {
-      this.$data.todos = (this.$data.todos as Todo[]).filter(todo => todo.id !== id)
-
-      localStorage.setItem('todos', JSON.stringify(this.$data.todos))
-    },
     handleToggleCheck(id: string) {
-      this.$data.todos = (this.$data.todos as Todo[]).map(todo => {
-        if (todo.id === id) {
-          return { ...todo, done: !todo.done }
-        }
-
-        return todo
-      })
-
-      console.log(this.$data.todos)
-
-      localStorage.setItem('todos', JSON.stringify(this.$data.todos))
+      todosStore.toggleCheck(id)
     },
-  },
-  created() {
-    const todos = JSON.parse(localStorage.getItem('todos') || '[]')
-    this.$data.todos = todos
+    handleDelete(id: string) {
+      todosStore.deleteTodo(id)
+    },
   },
 })
 </script>
